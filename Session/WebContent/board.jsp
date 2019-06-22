@@ -8,15 +8,18 @@
 </head>
 <body>
 	<% 
+		//현재  uri에서  contextRoot 제외한 경로를 문자열로 만들기
+		String caller = request.getRequestURI()
+				.substring(request.getContextPath().length()+1);
 		/* 
 			로그인 했으면 게시판 출력할건데 
 			로그안 안돼있으면 login.jsp로 이동
 		*/
 		String id = (String)session.getAttribute("login");
 		boolean notLogin = (id == null) ? true: false;
-		if(notLogin) response.sendRedirect("/login.jsp?from=board.jsp");
+		if(notLogin) response.sendRedirect("login.jsp?from="+ caller);
 	%>
 	board 게시판
-	<a href="/">go home</a>
+	<a href="index.jsp">go home</a>
 </body>
 </html>

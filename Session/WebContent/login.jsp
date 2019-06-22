@@ -26,8 +26,8 @@
 			}			
 		}
 	%>
-
-	<form action="/loginAction" method="post">
+	<a href=<%= request.getContextPath() %>>go Home</a>
+	<form action=<%=request.getContextPath()+ "/loginAction"%> method="post">
 		
 		id: <input type="text" placeholder="id" name="id" value=<%= id %> > <br />
 		pwd: <input type="password"  placeholder="pwd" name="pwd"/> <br />

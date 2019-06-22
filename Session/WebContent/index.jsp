@@ -15,15 +15,15 @@
 	
 	%>
 	<div>
-		<a href="/">Home</a>
+		<a href=<%=""%>>Home</a>
 		<!-- 로그인 안되어있으면 Login 링크 보여주기 -->
 		<%if(notLogin) {%>
-		<a href="/login.jsp?from=index.jsp">Login</a>
+		<a href=<%="login.jsp?from=index.jsp" %> >Login</a>
 		<%} else { %>
 		<!-- login 되어있으면 Logout 링크 보여주기 -->
-		<a href="/logoutAction">LogOut</a>
+		<a href=<%="logoutAction" %>>LogOut</a>
 		<%} %>
-		<a href="/board.jsp">Board</a>
+		<a href=<%="board.jsp" %>>Board</a>
 	</div>
 </body>
 </html>

@@ -24,7 +24,7 @@ public class loginAction extends HttpServlet {
 
 		// 어느페이지에서 login해서 왔는지
 		String caller = request.getParameter("caller");
-
+		System.out.println(caller);
 		// 세션설정
 //		request.getSession().setAttribute(name, value);
 		Cookie cookie = null;
@@ -53,7 +53,8 @@ public class loginAction extends HttpServlet {
 			response.addCookie(cookie);
 			response.sendRedirect(caller);
 		} else {
-			response.sendRedirect("/login.jsp?from=" + caller);
+			//이전페이지로 이동
+			response.sendRedirect(request.getHeader("referer"));
 		}
 	}
 
