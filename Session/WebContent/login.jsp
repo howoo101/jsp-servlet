@@ -1,12 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 	<%
 	//어디서 login페이지로 왔는지?
 	String caller = request.getParameter("from");
@@ -26,6 +19,13 @@
 			}			
 		}
 	%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
 	<a href=<%= request.getContextPath() %>>go Home</a>
 	<form action=<%=request.getContextPath()+ "/loginAction"%> method="post">
 		

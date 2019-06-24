@@ -1,12 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
 	<% 
 		//현재  uri에서  contextRoot 제외한 경로를 문자열로 만들기
 		String caller = request.getRequestURI()
@@ -19,6 +12,13 @@
 		boolean notLogin = (id == null) ? true: false;
 		if(notLogin) response.sendRedirect("login.jsp?from="+ caller);
 	%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
 	board 게시판
 	<a href="index.jsp">go home</a>
 </body>
