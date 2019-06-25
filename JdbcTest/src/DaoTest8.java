@@ -13,14 +13,16 @@ public class DaoTest8 {
 	public static void main(String[] args) throws SQLException {
 		UserDao udao = new UserDao();
 		List<User7> list = udao.selectAllUsers();
+		List<User7> list2 = udao.selectAllUsers();
 		System.out.println(list);
+		System.out.println(list2);
 
 	} // main()의 끝
 
 } // 클래스의 끝
 
 class Dao {
-	Connection conn;
+	Connection conn = null;
 	String tableName = "";
 	
 	static String DB_URL = "jdbc:mysql://localhost:3306/jsptest?useUnicode=true&characterEncoding=utf8&useSSL=false"; // DB이름인
@@ -37,15 +39,18 @@ class Dao {
 
 	Dao(Connection conn, String tableName) {
 		this.tableName = tableName;
+		this.conn = conn;
+	}
+	
+	void connect() {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			this.conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 	}
-
+	
 	void rollback() {
 		if (conn != null) {
 			try {
@@ -56,9 +61,13 @@ class Dao {
 		}
 	}
 
-	void close(AutoCloseable... acs) throws Exception {
+	void close(AutoCloseable... acs) {
 		for(AutoCloseable tmp : acs) {
-			tmp.close();
+			try {
+				tmp.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -68,9 +77,7 @@ class UserDao extends Dao{
 	 private UserDao userDao;
 	 
 	 PreparedStatement pstmt = null;
-	 Statement stmt = null;
 	 ResultSet rs = null;
-	
 	 public UserDao getInstance() {
 		if(userDao == null) {
 			userDao = new UserDao();
@@ -89,6 +96,7 @@ class UserDao extends Dao{
 	    	String query = "select * from "+ tableName;
 	    	List<User7> list = new ArrayList<>();
 	    	try {
+	    		connect();
 	    		pstmt =  (PreparedStatement)conn.prepareStatement(query);    // Statement를 가져온다.
 		        rs = pstmt.executeQuery(query);
 		        while(rs.next()) {
@@ -101,9 +109,9 @@ class UserDao extends Dao{
 		        }
 	    	} catch (Exception e) {
 				e.printStackTrace();
+				rollback();
 			} finally {
-				pstmt.close();
-				conn.close();
+				close(pstmt,conn);
 			}
 	    	
 	    	return list;
@@ -117,15 +125,16 @@ class UserDao extends Dao{
 
 			try {
 				// 드라이버를 로딩한다.
+				connect();
 				pstmt = (PreparedStatement) conn.prepareStatement(query); // Statement를 가져온다.
 				pstmt.setString(1, userId);
 				return pstmt.executeUpdate();
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				rollback();
 			} finally {
-				pstmt.close();
-				conn.close();
+				close(pstmt,conn);
 			}
 			return 0;
 		}
@@ -137,7 +146,8 @@ class UserDao extends Dao{
 			String query = "select * from"+ tableName+" where user_id = ?";
 
 			try {
-				// 드라이버를 로딩한다.
+				// 드라이버를 로딩한다
+				connect();
 				pstmt = (PreparedStatement) conn.prepareStatement(query); // Statement를 가져온다.
 				pstmt.setString(1, userId);
 				rs = pstmt.executeQuery();
@@ -152,9 +162,9 @@ class UserDao extends Dao{
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				rollback();
 			} finally {
-				pstmt.close();
-				conn.close();
+				close(pstmt,conn);
 			}
 			return null;
 
@@ -169,6 +179,7 @@ class UserDao extends Dao{
 			String query = "update"+tableName+" set user_id=?, user_name=? , user_pwd=? ," + "user_mail=? where user_id = ?";
 			try {
 				// 드라이버를 로딩한다.
+				connect();
 				pstmt = (PreparedStatement) conn.prepareStatement(query); // Statement를 가져온다.
 
 				pstmt.setString(1, u.id);
@@ -180,9 +191,9 @@ class UserDao extends Dao{
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				rollback();
 			} finally {
-				pstmt.close();
-				conn.close();
+				close(pstmt,conn);
 			}
 			return 0;
 		}
@@ -198,6 +209,7 @@ class UserDao extends Dao{
 			String query = "insert into user_info (user_id, user_name, user_pwd, user_mail)" + "values(?,?,?,?)";
 			try {
 				// 드라이버를 로딩한다.
+				connect();
 				pstmt = (PreparedStatement) conn.prepareStatement(query); // Statement를 가져온다.
 				pstmt.setString(1, u.id);
 				pstmt.setString(2, u.name);
@@ -207,9 +219,9 @@ class UserDao extends Dao{
 
 			} catch (Exception e) {
 				e.printStackTrace();
+				rollback();
 			} finally {
-				pstmt.close();
-				conn.close();
+				close(pstmt,conn);
 			}
 
 			return 0;
